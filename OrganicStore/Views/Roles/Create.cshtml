@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+<h2>
+    Create Role
+</h2>
+@Html.ActionLink("List Roles","Index")  | @Html.ActionLink("Manage User Roles","ManageUserRoles")
+</hr>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="col-md-12 form-group">
+        Role Name :@Html.TextBox("RoleName")
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+    
+}
+@section scripts{
+    <script type="text/javascript">
+    $(document).ready(function () {
+       
+        if ('@TempData["ResultMessage"]' != "" && '@TempData["ResultMessage"]' != null) {
+            toastr.success('@TempData["ResultMessage"]');
+       }
+        else{ }
+    });
+    </script>
+    }
+
+
+

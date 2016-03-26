@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "ManageUserRoles";
+}
+<h2>Manage User Roles</h2>
+@Html.ActionLink("Create New Role","Create") | @Html.ActionLink("Manage User role", "ManageUserroles") | @Html.ActionLink("Delete User Role","DeleteUserRole")
+</hr>
+<h2>Role Add to User</h2>
+@using (Html.BeginForm("RoleAddtoUser", "Roles"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+<div class="form-group">
+    UserName: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.UserName, new { @class = "form-control" })
+    Role Name: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.RoleName, new {  @class = "form-control" })
+
+</div>
+<div class="form-group">
+    <input type="submit" value="Save" class="btn btn-default"/>
+</div>
+}
+</hr>
+<h3>Get Roles for a User</h3>
+@using (Html.BeginForm("GetRoles", "Roles"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        UserName: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.UserName, new { @class = "form-control" })
+    </div>
+    <p>
+        <input type="submit" value="Get Roles for this User" class="btn btn-default" />
+    </p>
+}
+
+@if (ViewBag.RolesForThisUser != null)
+{
+    <div>
+        <h3>Roles for this user </h3>
+        <ol>
+            @foreach (string s in ViewBag.RolesForThisUser)
+            {
+                <li>@s</li>
+            }
+        </ol>
+    </div>
+ 
+}
+
+
+
+
+@section scripts{
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"> </script>
+    <script type="text/javascript">
+        ///Block Begin- for tostr notifications
+        $(document).ready(function () {
+
+        if ("@ViewData["ResultMessage"]" != "" && "@ViewData["ResultMessage"]" != null && "@ViewData["ResultMessage"]"==="saved") {
+            toastr.success('Role saved successfully.');
+       }
+        else if ("@ViewData["ResultMessage"]" != "" && "@ViewData["ResultMessage"]" != null && "@ViewData["ResultMessage"]" === "deleted") {
+            toastr.success('Role deleted successfully.');
+        }
+        else if ("@ViewData["ResultMessage"]" != "" && "@ViewData["ResultMessage"]" != null && "@ViewData["ResultMessage"]" === "error") {
+            toastr.error('somthing went wrong');
+        }
+            ///Block End- for tostr notifications
+        });
+        
+    </script>
+    }

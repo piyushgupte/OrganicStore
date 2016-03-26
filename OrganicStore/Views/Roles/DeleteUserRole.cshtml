@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = null;
+}
+<h2>Delete User Role</h2>
+@using (Html.BeginForm("DeleteRoleForUser", "Roles"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+
+        User Name: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.UserName, new { @class = "form-control", @onchange = "javascript:GetCity(this.value);" })
+    </div>
+    <div class="form-group">
+        @*@Html.DropDownList("UserRoles", new SelectList(Enumerable.Empty<SelectListItem>(), "", ""), new { @class = "form-control" })*@
+        Role Name: <select class="form-control" id="UserRoles" name="UserRoles"><option value="--Select--">--Select--</option></select>
+    </div>
+    <p>
+        <input type="submit" value="Delete" class="btn btn-default" />
+    </p>
+
+}
+
+@section scripts
+    {
+    <script language="javascript" type="text/javascript">
+        function GetCity(_userName) {
+            var procemessage = "<option value='0'>Please wait...</option>";
+            $("#UserRoles").html(procemessage).show();
+            var url = "/Roles/GetUserRoles";
+
+            $.ajax({
+                url: url,
+                data: { userName: _userName },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    var markup = "";
+                    for (var x = 0; x < data.length; x++) {
+                        markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                    }
+                    $("#UserRoles").html(markup).show();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+
+        }
+
+        ///Block Begin- for tostr notifications
+        $(document).ready(function () {
+           
+            if ("@TempData["ResultMessage"]" != "" && "@TempData["ResultMessage"]" != null && "@TempData["ResultMessage"]" === "saved") {
+                toastr.success('Role saved successfully.');
+            }
+            else if ("@TempData["ResultMessage"]" != "" && "@TempData["ResultMessage"]" != null && "@TempData["ResultMessage"]" === "deleted") {
+                toastr.success('Role deleted successfully.');
+            }
+            else if ("@TempData["ResultMessage"]" != "" && "@TempData["ResultMessage"]" != null && "@TempData["ResultMessage"]" === "error") {
+                toastr.error('somthing went wrong');
+            }
+            ///Block End- for tostr notifications
+           
+            //$("#UserName").change(function () {
+            //    if ($("#UserName").text != "--Select--" && $("#UserName").text != "" && $("#UserRoles").text != "--Select--" && $("#UserRoles").text != "" && $("#UserRoles").text != "Please wait...") {
+            //        $("input").prop('disabled', true)
+            //    }
+            //    else {
+            //        $("input").prop('disabled', false)
+            //    }
+
+            //});
+            //$("#UserRoles").change(function () {
+            //    if ($("#UserName").text != "--Select--" && $("#UserName").text != "" && $("#UserRoles").text != "--Select--" && $("#UserRoles").text != "" && $("#UserRoles").text != "Please wait...") {
+            //        $("input").prop('disabled', true)
+            //    }
+            //    else {
+            //        $("input").prop('disabled', false)
+            //    }
+
+            //});
+        });
+
+
+       
+    </script>
+}

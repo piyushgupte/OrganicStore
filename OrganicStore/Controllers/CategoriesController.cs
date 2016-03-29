@@ -48,7 +48,7 @@ namespace OrganicStore.Controllers
         // GET: Categories/Create
         public ActionResult Create()
         {
-            var Categories = db.Categories.OrderBy(p => p.CategoryName).ToList().Select(rr => new SelectListItem { Value = rr.CategoryId.ToString(), Text = rr.CategoryName }).DefaultIfEmpty();
+            var Categories = db.Categories.OrderBy(p => p.CategoryName).ToList().Select(rr => new SelectListItem { Value = rr.CategoryId.ToString(), Text = rr.CategoryName }).DefaultIfEmpty(new SelectListItem {Text="",Value="" });
             ViewBag.Categories = Categories;
             return View();
         }
@@ -62,6 +62,9 @@ namespace OrganicStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(category.PrarentId.ToString()))
+                    category.PrarentId = 0;
+
                 db.Categories.Add(category);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -86,7 +89,7 @@ namespace OrganicStore.Controllers
                                                    CategoryName=p.CategoryName,
                                                    CategoryId=p.CategoryId,
                                                    CategoryDetails = p.CategoryDetails,
-                                                   ParentCategoryId=p.PrarentId,
+                                                   ParentCategoryId=  p.PrarentId,
                                                    ParentCategory = db.Categories.Where(rr=> rr.CategoryId==p.PrarentId).Select(q=> q.CategoryName).FirstOrDefault()
                                                   
 
